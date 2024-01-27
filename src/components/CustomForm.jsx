@@ -8,44 +8,15 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CategoryHook from "../hooks/Category.hook";
 import MappingService from "../services/Mapping.service";
-import { NumericFormat } from "react-number-format";
-import PropTypes from "prop-types";
-
-const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
-  props,
-  ref
-) {
-  const { onChange, ...other } = props;
-
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      valueIsNumericString
-      prefix="$"
-    />
-  );
-});
-
-NumericFormatCustom.propTypes = {
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
+import { useNavigate } from "react-router-dom";
 
 const CustomForm = ({ onSubmit, initialData }) => {
   const {
@@ -59,6 +30,7 @@ const CustomForm = ({ onSubmit, initialData }) => {
   const [list, setList] = useState(null);
   const [message, setMessage] = useState(null);
   const categoryHook = CategoryHook();
+  const navigate = useNavigate();
 
   const setFormData = () => {
     if (initialData != null) {
@@ -89,7 +61,9 @@ const CustomForm = ({ onSubmit, initialData }) => {
     setFormData();
   }, [initialData]);
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    navigate("/product");
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -135,6 +109,9 @@ const CustomForm = ({ onSubmit, initialData }) => {
                   message: "El nombre solo puede contener letras del alfabeto",
                 },
               })}
+              InputLabelProps={{
+                shrink: initialData != null ? true : false,
+              }}
               fullWidth
               required
               label="Nombre"
@@ -152,6 +129,9 @@ const CustomForm = ({ onSubmit, initialData }) => {
                     "La descripción no puede ser mayor a 300 carracteres",
                 },
               })}
+              InputLabelProps={{
+                shrink: initialData != null ? true : false,
+              }}
               fullWidth
               label="Descripción"
               variant="outlined"
@@ -208,8 +188,12 @@ const CustomForm = ({ onSubmit, initialData }) => {
               fullWidth
               required
               label="Precio"
+              type="number"
               InputProps={{
-                inputComponent: NumericFormatCustom,
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+                inputMode: "numeric",
               }}
               InputLabelProps={{
                 shrink: true,
