@@ -3,10 +3,6 @@ import "./App.css";
 import Home from "../pages/shared/Home";
 import Error from "../pages/shared/Error";
 import Layout from "../containers/Layout";
-import CategoryList from "../pages/category/CategoryList";
-import CategoryCreate from "../pages/category/CategoryCreate";
-import CategoryUpdate from "../pages/category/CategoryUpdate";
-import CategoryDelete from "../pages/category/CategoryDelete";
 import ProductList from "../pages/product/ProductList";
 import ProductCreate from "../pages/product/ProductCreate";
 import ProductUpdate from "../pages/product/ProductUpdate";
@@ -18,21 +14,8 @@ function App() {
       <Layout>
         <BrowserRouter>
           <Routes>
-            <Route exact path="/" element={<Home />} />
+            <Route exact path="/" element={<ProductList />} />
             <Route path="*" element={<Error />} />
-
-            <Route exact path="/category" element={<CategoryList />} />
-            <Route exact path="/category/create" element={<CategoryCreate />} />
-            <Route
-              exact
-              path="/category/update/:id"
-              element={<CategoryUpdate />}
-            />
-            <Route
-              exact
-              path="/category/remove/:id"
-              element={<CategoryDelete />}
-            />
 
             <Route exact path="/product" element={<ProductList />} />
             <Route exact path="/product/create" element={<ProductCreate />} />

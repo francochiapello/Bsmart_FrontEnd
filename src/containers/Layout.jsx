@@ -58,15 +58,6 @@ const Layout = ({ children }) => {
                 onClick={() => {
                   handleCloseNavMenu();
                 }}
-                href="/category"
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                Categorias
-              </Button>
-              <Button
-                onClick={() => {
-                  handleCloseNavMenu();
-                }}
                 href="/product"
                 sx={{ my: 2, color: "white", display: "block" }}
               >

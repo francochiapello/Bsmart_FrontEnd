@@ -11,12 +11,10 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
 import CategoryHook from "../../hooks/Category.hook";
 import { ArrowBack, Save } from "@mui/icons-material";
 
-const CategoryUpdate = () => {
-  const navigate = useNavigate();
+const CategoryUpdate = ({ id, setMode }) => {
   const [message, setMessage] = useState(null);
   const {
     handleSubmit,
@@ -25,11 +23,10 @@ const CategoryUpdate = () => {
     formState: { errors },
   } = useForm();
   const categoryHook = CategoryHook();
-  const params = useParams();
 
   const getOne = () => {
     categoryHook
-      .getOne(params.id)
+      .getOne(id)
       .then((value) => {
         if (value.status == 200) {
           setMessage(null);
@@ -48,10 +45,10 @@ const CategoryUpdate = () => {
 
   const onSubmit = (data) => {
     categoryHook
-      .update(params.id, data)
+      .update(id, data)
       .then((value) => {
         if (value.status == 200) {
-          navigate("/category");
+          setMode("index");
         }
       })
       .catch((error) => {
@@ -59,7 +56,7 @@ const CategoryUpdate = () => {
       });
   };
   const handleClick = () => {
-    navigate("/category");
+    setMode("index");
   };
 
   return (

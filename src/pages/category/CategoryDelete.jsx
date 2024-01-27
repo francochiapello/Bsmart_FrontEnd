@@ -11,13 +11,10 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
 import CategoryHook from "../../hooks/Category.hook";
 import { ArrowBack, Delete } from "@mui/icons-material";
 
-const CategoryDelete = () => {
-  const navigate = useNavigate();
-  const params = useParams();
+const CategoryDelete = ({ id, setMode }) => {
   const [message, setMessage] = useState(null);
   const {
     handleSubmit,
@@ -29,7 +26,7 @@ const CategoryDelete = () => {
 
   const getOne = () => {
     categoryHook
-      .getOne(params.id)
+      .getOne(id)
       .then((value) => {
         if (value.status == 200) {
           setMessage(null);
@@ -47,18 +44,20 @@ const CategoryDelete = () => {
 
   const onSubmit = () => {
     categoryHook
-      .remove(params.id)
+      .remove(id)
       .then((value) => {
         if (value.status === 200) {
-          navigate("/category");
+          setMode("index");
         }
       })
       .catch((error) => {
-        setMessage(`Error en procesar la solicitud, Error:${error.message}`);
+        setMessage(
+          `Error en procesar la solicitud, ${error?.response?.data.message}`
+        );
       });
   };
   const handleClick = () => {
-    navigate("/category");
+    setMode("index");
   };
 
   return (

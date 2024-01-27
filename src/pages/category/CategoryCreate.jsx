@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CategoryHook from "../../hooks/Category.hook";
 
-const CategoryCreate = () => {
+const CategoryCreate = ({ setMode }) => {
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -31,7 +31,7 @@ const CategoryCreate = () => {
       .create(data)
       .then((value) => {
         if (value.status == 200) {
-          navigate("/category");
+          setMode("index");
         }
       })
       .catch(() => {
@@ -40,7 +40,7 @@ const CategoryCreate = () => {
   };
 
   const handleClick = () => {
-    navigate("/category");
+    setMode("index");
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
