@@ -34,8 +34,14 @@ const CategoryCreate = ({ setMode }) => {
           setMode("index");
         }
       })
-      .catch(() => {
-        setMessage(`Error al procesar la solicitud`);
+      .catch((error) => {
+        if (error?.response?.status == 401) {
+          setMessage(
+            `Error al procesar la solicitud, usuario no esta authorizado`
+          );
+        } else {
+          setMessage(`Error al procesar la solicitud`);
+        }
       });
   };
 

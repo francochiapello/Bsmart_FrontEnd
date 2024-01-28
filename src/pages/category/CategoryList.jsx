@@ -36,7 +36,13 @@ const CategoryList = () => {
         }
       })
       .catch((error) => {
-        setMessage(`Error al procesar la solicitud, Error:${error.message}`);
+        if (error?.response?.status == 401) {
+          setMessage(
+            `Error al procesar la solicitud, usuario no esta authorizado`
+          );
+        } else {
+          setMessage(`Error al procesar la solicitud`);
+        }
       });
   };
 

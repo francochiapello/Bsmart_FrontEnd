@@ -52,7 +52,13 @@ const CategoryUpdate = ({ id, setMode }) => {
         }
       })
       .catch((error) => {
-        setMessage(`Error en procesar la solicitud, Error:${error.message}`);
+        if (error?.response?.status == 401) {
+          setMessage(
+            `Error al procesar la solicitud, usuario no esta authorizado`
+          );
+        } else {
+          setMessage(`Error al procesar la solicitud`);
+        }
       });
   };
   const handleClick = () => {

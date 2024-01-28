@@ -4,12 +4,22 @@ import {
   Box,
   Button,
   Container,
+  MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
+import Cookie from "../services/Cookie.service";
+import { useNavigate } from "react-router-dom";
 
 const Layout = ({ children }) => {
+  const { remove, getCookie } = Cookie();
+  const navigate = useNavigate();
+
   const handleCloseNavMenu = () => {};
+  const handleExist = () => {
+    remove();
+    navigate("/login");
+  };
 
   return (
     <>
@@ -54,16 +64,25 @@ const Layout = ({ children }) => {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              <Button
-                onClick={() => {
-                  handleCloseNavMenu();
-                }}
-                href="/product"
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                Productos
-              </Button>
+              {getCookie() != null && (
+                <Button
+                  onClick={() => {
+                    handleCloseNavMenu();
+                  }}
+                  href="/product"
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  Productos
+                </Button>
+              )}
             </Box>
+            {getCookie() != null && (
+              <Box sx={{ flexGrow: 0 }}>
+                <MenuItem onClick={handleExist}>
+                  <Typography textAlign="center">Salir</Typography>
+                </MenuItem>
+              </Box>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
