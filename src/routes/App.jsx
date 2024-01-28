@@ -7,6 +7,9 @@ import ProductList from "../pages/product/ProductList";
 import ProductCreate from "../pages/product/ProductCreate";
 import ProductUpdate from "../pages/product/ProductUpdate";
 import ProductDelete from "../pages/product/ProductDelete";
+import Login from "../pages/user/Login";
+import Register from "../pages/user/Register";
+import ProtectLink from "../components/ProtectLink";
 
 function App() {
   return (
@@ -14,7 +17,18 @@ function App() {
       <Layout>
         <BrowserRouter>
           <Routes>
-            <Route exact path="/" element={<ProductList />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
+
+            <Route
+              exact
+              path="/"
+              element={
+                <ProtectLink>
+                  <ProductList />
+                </ProtectLink>
+              }
+            />
             <Route path="*" element={<Error />} />
 
             <Route exact path="/product" element={<ProductList />} />

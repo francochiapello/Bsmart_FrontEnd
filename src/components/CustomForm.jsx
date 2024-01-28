@@ -1,4 +1,4 @@
-import { ArrowBack, Save } from "@mui/icons-material";
+import { ArrowBack, Delete, Save } from "@mui/icons-material";
 import {
   Alert,
   Autocomplete,
@@ -8,27 +8,34 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CategoryHook from "../hooks/Category.hook";
 import MappingService from "../services/Mapping.service";
 import { useNavigate } from "react-router-dom";
 
-const CustomForm = ({ onSubmit, initialData }) => {
+const CustomForm = ({ onSubmit, initialData, remove }) => {
   const {
     handleSubmit,
     register,
     setValue,
     control,
+    trigger,
     formState: { errors },
   } = useForm();
+  const formRef = useRef();
   const { TransformList } = MappingService();
   const [list, setList] = useState(null);
   const [message, setMessage] = useState(null);
+  const [open, setOpen] = useState(false);
   const categoryHook = CategoryHook();
   const navigate = useNavigate();
 
@@ -66,7 +73,33 @@ const CustomForm = ({ onSubmit, initialData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>
+          {remove
+            ? "¿Estas seguro que quieres eliminar este producto?"
+            : "¿Estas seguro que quieres guardar este producto?"}
+        </DialogTitle>
+        <DialogContent></DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {
+              setOpen(false);
+              trigger().then((value) => {
+                if (value) {
+                  handleSubmit(onSubmit)();
+                }
+              });
+            }}
+            color="primary"
+          >
+            Si
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Card>
         <CardHeader
           sx={{
@@ -76,7 +109,9 @@ const CustomForm = ({ onSubmit, initialData }) => {
           title={
             <Typography variant="h5" sx={{ textAlign: "left" }}>
               {initialData != null
-                ? "Actualizar Producto"
+                ? remove
+                  ? "Eliminar producto"
+                  : "Actualizar Producto"
                 : "Agregar un Producto"}
             </Typography>
           }
@@ -110,7 +145,10 @@ const CustomForm = ({ onSubmit, initialData }) => {
                 },
               })}
               InputLabelProps={{
-                shrink: initialData != null ? true : false,
+                shrink: true,
+              }}
+              InputProps={{
+                readOnly: remove,
               }}
               fullWidth
               required
@@ -130,7 +168,10 @@ const CustomForm = ({ onSubmit, initialData }) => {
                 },
               })}
               InputLabelProps={{
-                shrink: initialData != null ? true : false,
+                shrink: true,
+              }}
+              InputProps={{
+                readOnly: remove,
               }}
               fullWidth
               label="Descripción"
@@ -158,6 +199,7 @@ const CustomForm = ({ onSubmit, initialData }) => {
               type="number"
               InputProps={{
                 inputMode: "numeric",
+                readOnly: remove,
               }}
               InputLabelProps={{
                 shrink: true,
@@ -194,6 +236,7 @@ const CustomForm = ({ onSubmit, initialData }) => {
                   <InputAdornment position="start">$</InputAdornment>
                 ),
                 inputMode: "numeric",
+                readOnly: remove,
               }}
               InputLabelProps={{
                 shrink: true,
@@ -214,6 +257,7 @@ const CustomForm = ({ onSubmit, initialData }) => {
                 const { onChange, value } = field;
                 return (
                   <Autocomplete
+                    readOnly={remove}
                     disablePortal
                     options={list == null ? [] : list}
                     isOptionEqualToValue={(option, value) =>
@@ -248,8 +292,11 @@ const CustomForm = ({ onSubmit, initialData }) => {
           </Box>
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button type="submit" startIcon={<Save />}>
-            Guardar
+          <Button
+            onClick={() => setOpen(true)}
+            startIcon={remove ? <Delete /> : <Save />}
+          >
+            {remove ? "Eliminar" : "Guardar"}
           </Button>
         </CardActions>
       </Card>

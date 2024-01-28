@@ -45,7 +45,7 @@ const ProductUpdate = () => {
   return (
     <>
       {message != null && <Alert severity="error">{message}</Alert>}
-      <CustomForm onSubmit={onSubmit} initialData={data} />
+      <CustomForm onSubmit={onSubmit} initialData={data} remove={false} />
     </>
   );
 };
